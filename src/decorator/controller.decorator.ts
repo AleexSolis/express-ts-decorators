@@ -3,7 +3,7 @@ import "reflect-metadata";
 export function Controller(prefix?: string): ClassDecorator {
   const defaultPath = "/";
 
-  return (target: Function) => {
+  return (target) => {
     target.prototype.path = prefix || defaultPath;
   };
 }
@@ -13,9 +13,8 @@ function MethodDecoratorFactory(
   path: string | string[] = "/"
 ): MethodDecorator {
   return (
-    target: Object,
-    propertyKey: string | symbol,
-    descriptor: PropertyDescriptor
+    target: object,
+    propertyKey: string | symbol
   ) => {
     Reflect.defineMetadata("Controller", { method, path }, target, propertyKey);
   };
