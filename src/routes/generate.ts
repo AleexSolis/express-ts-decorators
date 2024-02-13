@@ -1,5 +1,6 @@
 import express from "express";
 import { MetaData, RouteController } from "../types/common";
+import { Reset, FgGreen } from "../tools";
 
 const generateRoutes = (controllers: (typeof RouteController)[]) => {
   const mainRouter = express.Router();
@@ -19,14 +20,14 @@ const generateRoutes = (controllers: (typeof RouteController)[]) => {
           const { method, path } = metadata;
           router[method](path, item);
           console.log(
-            `[Server]: Route ${method} ${route.path}${path} registered`
+            `${FgGreen}%s${Reset}`,
+            `LOG [GenerateRoutes]: Route ${method} ${route.path}${path} registered`
           );
         }
       }
     });
-    
-    const controllerPath = route.path || "/";
-    mainRouter.use(controllerPath, router);
+
+    mainRouter.use(`${route.path}`, router);
   });
   return mainRouter;
 };

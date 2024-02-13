@@ -1,20 +1,18 @@
-type MetaData = {
+export type MetaData = {
   method: "get" | "post" | "put" | "delete";
   path: string | string[];
+};
+
+export class RouteController {
+  path: string | undefined;
 }
 
-class RouteController {
-  path?: string;
-}
-
-declare type ClassDecorator = <TFunction extends Function>(
+export declare type ClassDecorator = <TFunction extends Function>(
   target: TFunction
 ) => TFunction | void;
 
-declare type MethodDecorator = <T>(
+export declare type MethodDecorator = <T>(
   target: Object,
   propertyKey: string | symbol,
   descriptor: TypedPropertyDescriptor<T>
 ) => TypedPropertyDescriptor<T> | void;
-
-export { MetaData, RouteController, ClassDecorator, MethodDecorator };

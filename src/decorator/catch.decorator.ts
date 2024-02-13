@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import { Reset, FgRed } from "../tools";
 
 // This is a decorator that catches exceptions and logs them, is used in functions from controllers
 export function Catch(): MethodDecorator {
   return (
     _target: unknown,
-    _propertyKey: string | symbol,
+    propertyKey: string | symbol,
     descriptor: PropertyDescriptor
   ) => {
     const originalMethod = descriptor.value;
@@ -16,7 +17,7 @@ export function Catch(): MethodDecorator {
           throw e;
         }
 
-        console.error(e, {
+        console.log(`${FgRed}%s${Reset}`, `ERROR [${String(propertyKey)}]: ${e.message}`, {
           body: JSON.stringify(req.body),
           query: JSON.stringify(req.query),
         });

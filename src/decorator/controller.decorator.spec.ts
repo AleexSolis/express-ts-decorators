@@ -1,3 +1,5 @@
+import express, { Request, Response } from "express";
+import request from "supertest";
 import { Controller, Delete, Get, Post, Put } from "./controller.decorator";
 import { RouteController } from "../types/common";
 
@@ -73,5 +75,62 @@ describe("Methods", () => {
     );
 
     expect(deleteMetadata).toEqual({ method: "delete", path: "/delete" });
+  });
+});
+
+describe("Methods - Responses", () => {
+  @Controller()
+  class TestController {
+    @Get("/return")
+    getMethodReturn() {
+      return "Hello World return";
+    }
+
+    @Get("/response")
+    getResponse(_: Request, res: Response) {
+      res.status(200).send("Hello World response");
+    }
+
+    @Get("/return-response")
+    getMethodReturnResponse(_: Request, res: Response) {
+      res.status(200).send("Hello World response");
+      return "Hello World return";
+    }
+  }
+
+  it("Success - return", async () => {
+    const app = express();
+    const testClass = new TestController();
+
+    app.get("/return", testClass.getMethodReturn);
+
+    const response = await request(app).get("/return");
+
+    expect(response.status).toBe(200);
+    expect(response.text).toEqual("Hello World return");
+  });
+
+  it("Success - response", async () => {
+    const app = express();
+    const testClass = new TestController();
+
+    app.get("/response", testClass.getResponse);
+
+    const response = await request(app).get("/response");
+
+    expect(response.status).toBe(200);
+    expect(response.text).toEqual("Hello World response");
+  });
+
+  it("Success - return-response", async () => {
+    const app = express();
+    const testClass = new TestController();
+
+    app.get("/return-response", testClass.getMethodReturnResponse);
+
+    const response = await request(app).get("/return-response");
+
+    expect(response.status).toBe(200);
+    expect(response.text).toEqual("Hello World response");
   });
 });
